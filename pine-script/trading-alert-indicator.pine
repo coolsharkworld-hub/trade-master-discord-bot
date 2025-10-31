@@ -1,0 +1,101 @@
+// //@version=6
+// indicator("Discord Trading Alerts", shorttitle="DTA", overlay=true)
+
+// // Input parameters
+// rsi_length = input.int(14, title="RSI Length")
+// rsi_overbought = input.int(70, title="RSI Overbought Level")
+// rsi_oversold = input.int(30, title="RSI Oversold Level")
+
+// macd_fast = input.int(12, title="MACD Fast Length")
+// macd_slow = input.int(26, title="MACD Slow Length")
+// macd_signal = input.int(9, title="MACD Signal Length")
+
+// // Calculate indicators
+// rsi = ta.rsi(close, rsi_length)
+// [macd_line, signal_line, _] = ta.macd(close, macd_fast, macd_slow, macd_signal)
+
+// // Define conditions
+// buy_condition = ta.crossover(rsi, rsi_oversold) and macd_line > signal_line
+// sell_condition = ta.crossunder(rsi, rsi_overbought) and macd_line < signal_line
+
+// // Plot indicators
+// plot(rsi, title="RSI", color=color.blue, linewidth=2)
+// hline(rsi_overbought, title="Overbought", color=color.red, linestyle=hline.style_dashed)
+// hline(rsi_oversold, title="Oversold", color=color.green, linestyle=hline.style_dashed)
+
+// // Visual signals
+// plotshape(buy_condition, title="Buy Signal", style=shape.labelup, location=location.belowbar, color=color.green, text="BUY", textcolor=color.white, size=size.normal)
+// plotshape(sell_condition, title="Sell Signal", style=shape.labeldown, location=location.abovebar, color=color.red, text="SELL", textcolor=color.white, size=size.normal)
+
+// // Alert conditions
+// alertcondition(buy_condition, title="Buy Alert", message='{"secret": "your_webhook_secret_here", "symbol": "{{ticker}}", "action": "BUY", "price": {{close}}, "message": "RSI crossed above oversold level with bullish MACD"}')
+// alertcondition(sell_condition, title="Sell Alert", message='{"secret": "your_webhook_secret_here", "symbol": "{{ticker}}", "action": "SELL", "price": {{close}}, "message": "RSI crossed below overbought level with bearish MACD"}')
+
+
+
+// //@version=6
+// indicator("Discord Trading Alerts", shorttitle="DTA", overlay=true)
+
+// // Input parameters
+// rsi_length = input.int(7, title="RSI Length")  // Shorter RSI length
+// rsi_overbought = input.int(60, title="RSI Overbought Level")  // Lower overbought level
+// rsi_oversold = input.int(40, title="RSI Oversold Level")  // Higher oversold level
+
+// macd_fast = input.int(6, title="MACD Fast Length")  // Shorter MACD lengths
+// macd_slow = input.int(13, title="MACD Slow Length")
+// macd_signal = input.int(5, title="MACD Signal Length")
+
+// // Calculate indicators
+// rsi = ta.rsi(close, rsi_length)
+// [macd_line, signal_line, _] = ta.macd(close, macd_fast, macd_slow, macd_signal)
+
+// // Define conditions
+// buy_condition = ta.crossover(rsi, rsi_oversold) or macd_line > signal_line
+// sell_condition = ta.crossunder(rsi, rsi_overbought) or macd_line < signal_line
+
+// // Plot indicators
+// plot(rsi, title="RSI", color=color.blue, linewidth=2)
+// hline(rsi_overbought, title="Overbought", color=color.red, linestyle=hline.style_dashed)
+// hline(rsi_oversold, title="Oversold", color=color.green, linestyle=hline.style_dashed)
+
+// // Visual signals
+// plotshape(buy_condition, title="Buy Signal", style=shape.labelup, location=location.belowbar, color=color.green, text="BUY", textcolor=color.white, size=size.normal)
+// plotshape(sell_condition, title="Sell Signal", style=shape.labeldown, location=location.abovebar, color=color.red, text="SELL", textcolor=color.white, size=size.normal)
+
+// // Alert conditions
+// alertcondition(buy_condition, title="Buy Alert", message='{"secret": "your_webhook_secret_here", "symbol": "{{ticker}}", "action": "BUY", "price": {{close}}, "message": "RSI crossed above oversold level or bullish MACD"}')
+// alertcondition(sell_condition, title="Sell Alert", message='{"secret": "your_webhook_secret_here", "symbol": "{{ticker}}", "action": "SELL", "price": {{close}}, "message": "RSI crossed below overbought level or bearish MACD"}')
+
+
+//@version=6
+indicator("Discord Trading Alerts", shorttitle="DTA", overlay=true)
+
+// Input parameters
+rsi_length = input.int(10, title="RSI Length")  // Shortened RSI length for sensitivity
+rsi_overbought = input.int(68, title="RSI Overbought Level")  // Adjusted thresholds
+rsi_oversold = input.int(32, title="RSI Oversold Level")
+
+macd_fast = input.int(10, title="MACD Fast Length")  // Shortened MACD lengths
+macd_slow = input.int(20, title="MACD Slow Length")
+macd_signal = input.int(7, title="MACD Signal Length")
+
+// Calculate indicators
+rsi = ta.rsi(close, rsi_length)
+[macd_line, signal_line, _] = ta.macd(close, macd_fast, macd_slow, macd_signal)
+
+// Define conditions
+buy_condition = ta.crossover(rsi, rsi_oversold) or macd_line > signal_line
+sell_condition = ta.crossunder(rsi, rsi_overbought) or macd_line < signal_line
+
+// Plot indicators
+plot(rsi, title="RSI", color=color.blue, linewidth=2)
+hline(rsi_overbought, title="Overbought", color=color.red, linestyle=hline.style_dashed)
+hline(rsi_oversold, title="Oversold", color=color.green, linestyle=hline.style_dashed)
+
+// Visual signals
+plotshape(buy_condition, title="Buy Signal", style=shape.labelup, location=location.belowbar, color=color.green, text="BUY", textcolor=color.white, size=size.normal)
+plotshape(sell_condition, title="Sell Signal", style=shape.labeldown, location=location.abovebar, color=color.red, text="SELL", textcolor=color.white, size=size.normal)
+
+// Alert conditions
+alertcondition(buy_condition, title="Buy Alert", message='{"secret": "your_webhook_secret_here", "symbol": "{{ticker}}", "action": "BUY", "price": {{close}}, "message": "RSI crossed above oversold level or bullish MACD"}')
+alertcondition(sell_condition, title="Sell Alert", message='{"secret": "your_webhook_secret_here", "symbol": "{{ticker}}", "action": "SELL", "price": {{close}}, "message": "RSI crossed below overbought level or bearish MACD"}')
